@@ -1,0 +1,33 @@
+-- DAX starter patterns. Rename tables/columns and validate against curated data.
+-- Prefer a package-level delivery snapshot if event history contains multiple status rows per package.
+
+Delivered Packages =
+DISTINCTCOUNT ( FactDeliverySnapshot[package_id] )
+
+On-Time Delivered Packages =
+CALCULATE (
+    [Delivered Packages],
+    FactDeliverySnapshot[is_on_time] = TRUE ()
+)
+
+Eligible Delivered Packages =
+CALCULATE (
+    [Delivered Packages],
+    FactDeliverySnapshot[is_eligible_for_sla] = TRUE ()
+)
+
+On-Time Delivery Rate =
+DIVIDE ( [On-Time Delivered Packages], [Eligible Delivered Packages] )
+
+Open Overdue Packages =
+CALCULATE (
+    DISTINCTCOUNT ( FactDeliverySnapshot[package_id] ),
+    FactDeliverySnapshot[is_open_overdue] = TRUE ()
+)
+
+-- Revenue should be aggregated at order grain, not multiplied by event history.
+Overdue Order Value =
+CALCULATE (
+    SUM ( FactOrders[order_value] ),
+    FactOrders[is_open_overdue] = TRUE ()
+)
