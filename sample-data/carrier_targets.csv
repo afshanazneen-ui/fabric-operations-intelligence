@@ -1,0 +1,13 @@
+carrier,region,target_on_time_rate
+SwiftShip,Northeast,0.944
+SwiftShip,Southeast,0.926
+SwiftShip,Midwest,0.953
+SwiftShip,West,0.932
+ParcelPro,Northeast,0.966
+ParcelPro,Southeast,0.956
+ParcelPro,Midwest,0.960
+ParcelPro,West,0.965
+NorthStar Logistics,Northeast,0.939
+NorthStar Logistics,Southeast,0.918
+NorthStar Logistics,Midwest,0.896
+NorthStar Logistics,West,0.902
