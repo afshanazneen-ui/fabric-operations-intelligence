@@ -2,56 +2,39 @@
 
 ## Overview
 
-The Delivery Operations Intelligence semantic model connects the Gold-layer analytics tables from the Fabric Lakehouse to Power BI for business reporting and analysis.
-
-The model uses a Direct Lake connection to the Lakehouse.
+The Power BI semantic model connects to the Microsoft Fabric Lakehouse using Direct Lake. It provides the data model for the Executive Delivery Dashboard.
 
 ## Model Tables
 
-| Table | Purpose |
-|---|---|
-| `gold_delivery_performance` | Order-level delivery performance analysis |
-| `gold_daily_delivery_metrics` | Daily delivery metrics aggregated by order date and region |
-| `gold_carrier_performance` | Carrier and regional performance against delivery targets |
-| `dim_date` | Shared date dimension for time-based analysis |
-| `Measures` | Dedicated table for Power BI measures |
-| `Delivery Status Legend` | Supports delivery-status reporting |
-| `Delivery Days Threshold` | Supports delivery-day threshold selection |
-| `Delivery Duration Bins` | Supports delivery-duration grouping |
+The model includes:
+
+- `gold_delivery_performance`
+- `gold_daily_delivery_metrics`
+- `gold_carrier_performance`
+- `dim_date`
+- `Measures`
+- `Delivery Status Legend`
+- `Delivery Days Threshold`
+- `Delivery Duration Bins`
 
 ## Relationships
 
-The semantic model contains two relationships:
+The model contains two relationships:
 
-| One side | Many side | Relationship key |
-|---|---|---|
-| `dim_date[Date]` | `gold_delivery_performance[order_date]` | Date |
-| `dim_date[Date]` | `gold_daily_delivery_metrics[order_date]` | Date |
+| One Side | Many Side |
+|---|---|
+| `dim_date[Date]` | `gold_daily_delivery_metrics[order_date]` |
+| `dim_date[Date]` | `gold_delivery_performance[order_date]` |
 
-Both relationships use a one-to-many structure from `dim_date` to the respective Gold tables.
+Both relationships support date-based filtering across the connected analytical tables.
 
-The shared date dimension supports consistent date-based analysis across order-level and daily aggregated delivery data.
+## Implementation Notes
 
-No relationship to `gold_carrier_performance` was observed in the model view.
+- The semantic model uses a Direct Lake connection to the Fabric Lakehouse.
+- A separate `Measures` table is included in the model.
+- The date dimension is named `dim_date`.
+- `gold_carrier_performance` is included in the model; no relationship to it is documented here.
 
-## Modeling Approach
+## Report Usage
 
-- Gold-layer tables provide the analytical data used by the semantic model.
-- A shared date dimension supports time-based reporting.
-- A dedicated Measures table organizes Power BI measures.
-- Supporting tables provide delivery-status and delivery-duration reporting functionality.
-
-## Reporting
-
-The semantic model supports the Executive Delivery Dashboard, including:
-
-- Delivery performance KPIs
-- On-time and late delivery analysis
-- Regional performance comparisons
-- Carrier performance analysis
-- Delivery-duration distribution
-- Monthly delivery trends
-
-## Scope Notes
-
-This document describes the observed semantic-model structure and relationships. Detailed DAX measure definitions are intentionally excluded from this portfolio documentation.
+The semantic model supports the Executive Delivery Dashboard, including delivery performance KPIs, trends, regional analysis, carrier comparisons, and delivery-duration analysis.
