@@ -1,12 +1,49 @@
-# Power BI implementation
+# Power BI Implementation
 
-Add the actual Power BI project files and report evidence here.
+## Delivery Operations Intelligence Dashboard
 
-Suggested deliverables:
-- PBIP project files, if using Power BI Project format
-- Semantic model documentation and relationship screenshot
-- DAX measure definitions or references to `../queries/dax/`
-- Report screenshots in `../assets/`
-- A short note explaining the actual storage mode, refresh approach, and security tests
+This folder contains documentation for the Power BI reporting component of the Delivery Operations Intelligence project.
 
-Do not commit credentials, private data, or unsupported claims. Test the report totals against Gold tables.
+## Report Documentation
+
+- [Power BI Report Overview](report-overview.md) – Dashboard KPIs, visualizations, interactive filters, data source, and business value.
+
+## Semantic Model
+
+The Power BI semantic model connects to the Microsoft Fabric Lakehouse using Direct Lake.
+
+The model includes:
+- Gold delivery performance tables.
+- Date dimension.
+- Supporting measures and reporting tables.
+- Date relationships supporting time-based analysis.
+
+For implementation details, see [Fabric Semantic Model Documentation](../fabric/semantic-model.md).
+
+## Executive Delivery Dashboard
+
+The report includes:
+
+- Year-to-date on-time delivery rate and target.
+- On-time delivery variance.
+- Late orders and total orders.
+- Average delivery days and on-time orders.
+- Delivery status distribution.
+- Regional and carrier performance.
+- Monthly delivery performance trends.
+
+Interactive slicers are available for Region, Carrier, and Year.
+
+## Implementation Scope
+
+The current documentation covers the implemented Executive Delivery Dashboard page and its semantic model.
+
+Additional project artifacts, such as PBIP files, report screenshots, and validation evidence, can be added as they become available.
+
+## Security and Data Validation
+
+Storage mode: Direct Lake.
+
+Refresh configuration, security testing, and reconciliation of report totals against Gold-layer tables should be documented separately when verified.
+
+Do not include credentials, confidential information, or unsupported implementation claims.
