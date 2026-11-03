@@ -1,1 +1,68 @@
-# fabric-operations-intelligence
+# Fabric Operations Intelligence
+
+**Delivery Operations Intelligence | Microsoft Fabric | Power BI | Data Engineering | Business Intelligence**
+
+## Project Overview
+
+Delivery Operations Intelligence is an end-to-end data analytics portfolio project built using Microsoft Fabric and Power BI.
+
+The project demonstrates how delivery data can be ingested, transformed, organized into analytical tables, and presented through an interactive executive dashboard.
+
+## Architecture
+
+The solution follows a Medallion Architecture:
+
+**Bronze → Silver → Gold → Power BI**
+
+- **Bronze:** Ingests source data into Delta tables and maintains ingestion metadata and control information.
+- **Silver:** Applies data transformations, standardization, and data quality validation.
+- **Gold:** Creates curated analytical tables for delivery performance, daily metrics, and carrier analysis.
+- **Power BI:** Uses a Direct Lake semantic model to support the Executive Delivery Dashboard.
+
+## Technology Stack
+
+- Microsoft Fabric
+- OneLake and Fabric Lakehouse
+- PySpark
+- Delta Lake
+- Fabric Data Pipelines
+- Power BI
+- Direct Lake
+- DAX and Power Query
+
+## Business Objectives
+
+The project focuses on analyzing:
+
+- On-time delivery performance
+- Late orders and delivery exceptions
+- Carrier performance against targets
+- Regional delivery trends
+- Delivery duration and operational efficiency
+
+## Repository Structure
+
+| Folder | Contents |
+|---|---|
+| `fabric/` | Lakehouse, ingestion, transformation, orchestration, and semantic model documentation |
+| `powerbi/` | Power BI report documentation |
+| `docs/` | Architecture, business requirements, data dictionary, KPI definitions, design decisions, deployment runbook, limitations, and implementation status |
+
+## Documentation
+
+- [Fabric Implementation](fabric/README.md)
+- [Power BI Documentation](powerbi/report-overview.md)
+- [Implementation Status](docs/implementation-status.md)
+- [Architecture](docs/architecture.md)
+- [Business Requirements](docs/business-requirements.md)
+- [Data Dictionary](docs/data-dictionary.md)
+- [KPI Definitions](docs/kpi-definitions.md)
+- [Design Decisions](docs/design-decisions.md)
+- [Limitations](docs/limitations.md)
+- [Deployment Runbook](docs/deployment-runbook.md)
+
+## Project Status
+
+The Fabric medallion processing notebooks, orchestration workflow, Gold analytical tables, semantic model, and Executive Delivery Dashboard have been implemented and documented.
+
+This portfolio is being maintained to demonstrate practical Microsoft Fabric and Power BI solution development.
