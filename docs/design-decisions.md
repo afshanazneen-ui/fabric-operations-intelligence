@@ -1,23 +1,17 @@
 # Design Decisions
 
-Maintain this log as choices are made. These are initial recommendations, not claims that the decisions have already been implemented.
+This log records key design choices reflected in the current Delivery Operations Intelligence implementation.
 
-| ID | Decision | Rationale | Trade-off / validation |
+| ID | Decision | Rationale | Notes |
 |---|---|---|---|
-| ADR-001 | Use Bronze, Silver, and Gold layers | Separates source preservation, quality processing, and reporting | Verify lineage and row counts between layers |
-| ADR-002 | Preserve distinct fact grains | Prevents event joins from multiplying order value | Reconcile revenue at order grain |
-| ADR-003 | Define KPIs centrally in the semantic model | Reduces duplicated logic across report pages | Test DAX against independently computed totals |
-| ADR-004 | Build historical reporting before streaming | Produces a useful complete portfolio milestone early | Streaming remains optional until core model is trusted |
-| ADR-005 | Use synthetic data | Avoids exposing real customer or employer information | Clearly label it synthetic in GitHub |
-| ADR-006 | Choose storage mode based on environment support | Avoids claiming Direct Lake without evidence | Record actual mode and limitations |
-| ADR-007 | Treat AI output as a draft | Generated code can misinterpret grain and KPI definitions | Keep prompts, tests, defects, and final decisions in AI log |
+| ADR-001 | Use a Bronze, Silver, and Gold medallion architecture. | Separates source ingestion, data preparation, and reporting datasets. | Implemented in the Fabric Lakehouse. |
+| ADR-002 | Use PySpark notebooks for data processing. | Supports ingestion, transformation, validation, and analytical table creation within Fabric. | Processing is organized through `pl_delivery_medallion`. |
+| ADR-003 | Store processed datasets as Delta tables. | Provides a consistent table format across the Lakehouse layers. | Bronze, Silver, and Gold tables use Delta format. |
+| ADR-004 | Maintain Gold tables at defined reporting grains. | Supports order-level analysis alongside daily and carrier-level aggregates. | See `docs/data-dictionary.md`. |
+| ADR-005 | Use Direct Lake for the Power BI semantic model. | Connects the report to curated Lakehouse tables. | The current model includes date relationships to the daily metrics and order-level performance tables. |
+| ADR-006 | Use synthetic source data. | Enables a public portfolio demonstration without publishing real customer or employer data. | Source files are documented in `sample-data/`. |
+| ADR-007 | Keep the report focused on one Executive Delivery Dashboard page. | Demonstrates core delivery KPIs and performance analysis in a concise report. | Additional pages are outside the current project scope. |
 
-## Decision record template
+## Scope Notes
 
-- **ID / date:**
-- **Context:**
-- **Options considered:**
-- **Decision:**
-- **Why:**
-- **Consequences / trade-offs:**
-- **Validation evidence:**
+This log describes decisions reflected in the current implementation. It does not claim that production deployment, streaming, automated monitoring, or a formal automated testing framework has been implemented.
