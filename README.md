@@ -47,6 +47,8 @@ The project focuses on analyzing:
 | `fabric/` | Lakehouse, ingestion, transformation, orchestration, and semantic model documentation |
 | `powerbi/` | Power BI report documentation |
 | `docs/` | Architecture, business requirements, data dictionary, KPI definitions, design decisions, deployment runbook, limitations, and implementation status |
+| `sample-data/` | Synthetic CSV source datasets used for ingestion |
+| `tests/` | Data validation and testing approach |
 
 ## Documentation
 
@@ -60,9 +62,13 @@ The project focuses on analyzing:
 - [Design Decisions](docs/design-decisions.md)
 - [Limitations](docs/limitations.md)
 - [Deployment Runbook](docs/deployment-runbook.md)
+- [Data Validation](tests/README.md)
+- [Sample Data](sample-data/README.md)
 
 ## Project Status
 
-The Fabric medallion processing notebooks, orchestration workflow, Gold analytical tables, semantic model, and Executive Delivery Dashboard have been implemented and documented.
+The Fabric Lakehouse medallion layers, three processing notebooks, pipeline configuration, Gold analytical tables, Direct Lake semantic model, and Executive Delivery Dashboard have been implemented and documented.
 
-This portfolio is being maintained to demonstrate practical Microsoft Fabric and Power BI solution development.
+Individual notebook activities completed successfully during implementation. End-to-end pipeline execution evidence and KPI reconciliation remain areas for further validation.
+
+This portfolio demonstrates practical Microsoft Fabric and Power BI solution development using synthetic data.
