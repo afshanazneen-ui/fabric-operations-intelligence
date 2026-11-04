@@ -1,12 +1,23 @@
-# Synthetic Sample Data
+# Sample Data
 
-All CSV files in this folder are synthetic and intended for demonstration. They do not represent a real retailer, customer, carrier, or production environment.
+## Overview
 
-Files:
-- `orders.csv`
-- `order_items.csv`
-- `customers.csv`
-- `delivery_events.csv`
-- `carrier_targets.csv`
+This folder contains the sample source datasets used in the Delivery Operations Intelligence project.
 
-The small starter dataset is suitable for learning and screenshots, not for performance benchmarking. Add larger synthetic data only when you need a controlled scale test.
+The datasets represent order, customer, order item, delivery event, and carrier target information used to demonstrate data ingestion and transformation in Microsoft Fabric.
+
+## Files
+
+| File | Description |
+|---|---|
+| `orders.csv` | Order-level information, including order dates, customer references, and order values. |
+| `customers.csv` | Customer reference information. |
+| `order_items.csv` | Individual items associated with customer orders. |
+| `delivery_events.csv` | Delivery event and status information. |
+| `carrier_targets.csv` | Carrier performance targets by carrier and region. |
+
+## Usage
+
+These files serve as source datasets for the Bronze layer of the Fabric Lakehouse medallion architecture.
+
+The data is provided for portfolio demonstration purposes.
