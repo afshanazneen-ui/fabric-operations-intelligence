@@ -2,7 +2,11 @@
 
 ## Delivery Operations Intelligence Dashboard
 
-This folder contains documentation for the Power BI reporting component of the Delivery Operations Intelligence project.
+This folder contains documentation and visual artifacts for the Power BI reporting component of the Delivery Operations Intelligence project.
+
+## Executive Dashboard Preview
+
+![Executive Delivery Dashboard](executive-overview.png)
 
 ## Report Documentation
 
@@ -36,9 +40,9 @@ Interactive slicers are available for Region, Carrier, and Year.
 
 ## Implementation Scope
 
-The current documentation covers the implemented Executive Delivery Dashboard page and its semantic model.
+The current implementation covers one Executive Delivery Dashboard page and its semantic model.
 
-Additional project artifacts, such as PBIP files, report screenshots, and validation evidence, can be added as they become available.
+The dashboard preview is available in `executive-overview.png`. Additional screenshots and validation evidence can be added as they become available.
 
 ## Security and Data Validation
 
