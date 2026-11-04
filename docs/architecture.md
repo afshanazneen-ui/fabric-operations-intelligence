@@ -1,9 +1,15 @@
 # Architecture
 
-## 1. Logical architecture
+## 1. Project Overview
+
+Delivery Operations Intelligence is a data engineering and business intelligence portfolio project built using Microsoft Fabric and Power BI.
+
+The solution follows a Medallion Architecture, organizing data into Bronze, Silver, and Gold layers before exposing curated analytical tables through a Power BI Direct Lake semantic model.
+
+## 2. Logical Architecture
 
 ```text
-Synthetic CSV sources
+Synthetic CSV Source Files
   ├── orders.csv
   ├── order_items.csv
   ├── customers.csv
@@ -11,89 +17,142 @@ Synthetic CSV sources
   └── carrier_targets.csv
           |
           v
-Fabric Data Factory pipeline
+Microsoft Fabric Lakehouse
           |
           v
-Bronze Lakehouse: source-aligned raw data
+Bronze Layer
+  └── Source-aligned Delta tables
           |
           v
-Dataflow Gen2 / Notebook / SQL (choose and document actual tools)
+Silver Layer
+  └── Cleaned and validated Delta tables
           |
           v
-Silver Lakehouse: cleaned, typed, deduplicated, validated data
+Gold Layer
+  ├── gold_delivery_performance
+  ├── gold_daily_delivery_metrics
+  ├── gold_carrier_performance
+  └── dim_date
           |
           v
-Gold reporting layer
-  ├── FactOrders
-  ├── FactOrderItems
-  ├── FactDeliveryEvents or package-level delivery snapshot
-  ├── DimDate
-  ├── DimCustomer
-  ├── DimCarrier
-  └── DimRegion
+Power BI Semantic Model
+  └── Direct Lake
           |
           v
-Power BI semantic model
-          |
-          v
-Executive Overview / Diagnose Performance / Data Trust & Operations
+Executive Delivery Dashboard
 ```
 
-## 2. Optional Real-Time Intelligence extension
+## 3. Data Ingestion and Processing
 
-```text
-Generated or sample delivery events
-          |
-          v
-Eventstream
-          |
-          v
-Eventhouse / KQL database
-          |
-          ├── KQL queries and event investigation
-          ├── Real-Time Dashboard
-          └── Activator rule (only if implemented)
-```
+The project uses a Microsoft Fabric Data Factory pipeline named `pl_delivery_medallion` to organize the processing workflow.
 
-If events are read from a file by a scheduled pipeline, label the implementation as batch ingestion. Do not call it streaming. Document the event source and the measured time from event generation to visible output.
+The pipeline contains three sequential notebook activities:
 
-## 3. Layer responsibilities
+1. `nb_delivery_bronze_ingestion`
+2. `nb_delivery_silver_transform`
+3. `nb_delivery_gold_analytics`
 
-| Layer | Responsibility | Expected evidence |
-|---|---|---|
-| Bronze | Retain source-aligned data for traceability | Source inventory, load time, row counts |
-| Silver | Normalize types and values; flag or quarantine invalid records | Transformation logic, quality checks |
-| Gold | Provide stable reporting grains and business-friendly entities | Table schema, reconciliation |
-| Semantic model | Define relationships, measures, date behavior, security | Model screenshot, DAX, test results |
-| Power BI | Present trends, comparisons, exceptions, and data trust | Report screenshots and interaction demo |
-| Operations | Capture run outcomes, incidents, recovery, and releases | Runbook, incident log, release notes |
+Each notebook activity was executed and completed successfully during implementation.
 
-## 4. Modeling decisions
+### Bronze Layer
 
-- Orders: one row per order.
-- Order items: one row per order-product line.
-- Delivery events: one row per event ID.
-- Customers: one row per customer ID.
-- Carrier targets: one row per carrier-region-target period (revise if target history is modeled).
+The Bronze layer contains source-aligned Delta tables created from the five synthetic CSV datasets.
 
-Orders and events must not be joined and then used to sum order value without controlling the grain. Prefer separate facts with shared dimensions or a deliberately defined package-level snapshot.
+Key implementation details:
 
-## 5. Semantic model
+- PySpark-based ingestion.
+- Delta table storage.
+- Source file and ingestion metadata.
+- Ingestion control and pending-record tables.
+- SHA-256 fingerprints for change detection.
 
-Recommended dimensions: Date, Customer, Carrier, Region, Product (if product analysis is in scope). Recommended facts: Orders, Order Items, Delivery Events or Delivery Snapshot.
+### Silver Layer
 
-Choose Direct Lake only if the target tables, workspace capacity, and semantic-model setup support it. Otherwise use a supported mode, document the actual choice, and explain the trade-off. Do not claim Direct Lake unless verified in the model.
+The Silver layer contains transformed and validated datasets.
 
-## 6. Security and governance
+Key activities include:
 
-Potential demonstration: region-based row-level security using a user-to-region mapping table. Test with separate test identities if the environment permits. If only Desktop “View as” testing is available, document that limitation; do not claim identity-level Service validation.
+- Data type standardization.
+- Date and timestamp parsing.
+- Data quality checks.
+- Duplicate business-key checks.
+- Referential-integrity checks.
+- Record-count validation.
 
-## 7. Architecture decisions to record
+### Gold Layer
 
-- Ingestion method and retry/re-run behavior.
-- Transformation tools and why they were selected.
-- Data grain and handling of multiple events per package.
-- Semantic-model storage mode and evidence.
-- How late-arriving events update historical KPIs.
-- How event data is reconciled with historical reporting.
-- Workspace, version control, and deployment approach.
+The Gold layer provides curated analytical datasets for reporting.
+
+| Table | Purpose |
+|---|---|
+| `gold_delivery_performance` | Order-level delivery performance analysis. |
+| `gold_daily_delivery_metrics` | Daily delivery metrics grouped by order date and region. |
+| `gold_carrier_performance` | Carrier and region performance compared with targets. |
+| `dim_date` | Date dimension for reporting and time-based analysis. |
+
+Gold tables are written in Delta format.
+
+## 4. Power BI Semantic Model
+
+The Power BI semantic model uses Direct Lake connectivity to the Fabric Lakehouse.
+
+The model includes:
+
+- `gold_delivery_performance`
+- `gold_daily_delivery_metrics`
+- `gold_carrier_performance`
+- `dim_date`
+- Supporting measure and reporting helper tables.
+
+The implemented date relationships are:
+
+- `dim_date[Date]` to `gold_daily_delivery_metrics[order_date]` (one-to-many).
+- `dim_date[Date]` to `gold_delivery_performance[order_date]` (one-to-many).
+
+The carrier performance table is not connected to the date dimension in the current model.
+
+## 5. Power BI Reporting
+
+The project includes one Executive Delivery Dashboard page.
+
+It provides:
+
+- Delivery performance KPIs.
+- On-time delivery performance against targets.
+- Late orders and order volume.
+- Average delivery time.
+- Delivery status distribution.
+- Regional and carrier comparisons.
+- Monthly delivery performance trends.
+- Delivery time distribution.
+
+Report filters include Region, Carrier, and Year.
+
+## 6. Data Grain and Modeling Considerations
+
+The Gold layer uses different analytical grains:
+
+- `gold_delivery_performance`: one row per order.
+- `gold_daily_delivery_metrics`: one row per order date and region.
+- `gold_carrier_performance`: one row per carrier and region.
+- `dim_date`: one row per calendar date.
+
+These grains are important when interpreting measures and aggregating order values or delivery counts.
+
+## 7. Scope and Limitations
+
+The current implementation focuses on batch ingestion, Lakehouse transformations, curated analytical tables, and Power BI reporting.
+
+The following capabilities are not represented as implemented features in this project:
+
+- Real-time streaming through Eventstream or Eventhouse.
+- Automated production monitoring and alerting.
+- Implemented row-level security.
+- Production deployment automation.
+- A formal automated testing framework.
+
+These may be considered future enhancements.
+
+## 8. Architecture Summary
+
+The solution demonstrates an end-to-end Microsoft Fabric analytics workflow, from synthetic source data ingestion through medallion-layer processing and curated Gold datasets to a Direct Lake semantic model and executive Power BI reporting.
