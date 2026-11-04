@@ -40,12 +40,16 @@ The project focuses on analyzing:
 - Regional delivery trends
 - Delivery duration and operational efficiency
 
+## Executive Dashboard Preview
+
+![Executive Delivery Dashboard](powerbi/executive-overview.png)
+
 ## Repository Structure
 
 | Folder | Contents |
 |---|---|
 | `fabric/` | Lakehouse, ingestion, transformation, orchestration, and semantic model documentation |
-| `powerbi/` | Power BI report documentation |
+| `powerbi/` | Power BI report documentation and dashboard preview |
 | `docs/` | Architecture, business requirements, data dictionary, KPI definitions, design decisions, deployment runbook, limitations, and implementation status |
 | `sample-data/` | Synthetic CSV source datasets used for ingestion |
 | `tests/` | Data validation and testing approach |
@@ -53,7 +57,8 @@ The project focuses on analyzing:
 ## Documentation
 
 - [Fabric Implementation](fabric/README.md)
-- [Power BI Documentation](powerbi/report-overview.md)
+- [Power BI Implementation](powerbi/README.md)
+- [Power BI Report Overview](powerbi/report-overview.md)
 - [Implementation Status](docs/implementation-status.md)
 - [Architecture](docs/architecture.md)
 - [Business Requirements](docs/business-requirements.md)
@@ -69,6 +74,12 @@ The project focuses on analyzing:
 
 The Fabric Lakehouse medallion layers, three processing notebooks, pipeline configuration, Gold analytical tables, Direct Lake semantic model, and Executive Delivery Dashboard have been implemented and documented.
 
-Individual notebook activities completed successfully during implementation. End-to-end pipeline execution evidence and KPI reconciliation remain areas for further validation.
+The pipeline is named `pl_delivery_medallion` and uses three notebooks:
+
+1. `nb_delivery_bronze_ingestion`
+2. `nb_delivery_silver_transform`
+3. `nb_delivery_gold_analytics`
+
+Individual notebook activities completed successfully during implementation. End-to-end pipeline execution evidence and Gold-layer KPI reconciliation remain areas for further validation.
 
 This portfolio demonstrates practical Microsoft Fabric and Power BI solution development using synthetic data.
