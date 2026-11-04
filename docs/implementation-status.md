@@ -46,7 +46,7 @@
 
 - Reconcile Gold-layer delivered and on-time delivery counts.
 - Capture evidence of a successful end-to-end pipeline run.
-- Add report screenshots and supporting validation evidence.
+- Add additional report screenshots and supporting validation evidence.
 - Consider additional operational monitoring and deployment practices.
 
 ## Notes
