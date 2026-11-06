@@ -13,12 +13,26 @@
   - `gold_daily_delivery_metrics`
   - `gold_carrier_performance`
   - `dim_date`
+- Aggregated daily delivery metrics by order date and region.
+- Aggregated carrier performance by carrier and region, including delivery targets and target variance.
 - Created the Data Factory pipeline `pl_delivery_medallion`.
 - Organized processing into three sequential notebook activities:
   - `nb_delivery_bronze_ingestion`
   - `nb_delivery_silver_transform`
   - `nb_delivery_gold_analytics`
 - Executed each notebook activity successfully during implementation.
+
+### Gold Layer Validation
+
+- Verified the delivery dataset contains 1,320 rows and 1,320 distinct orders, with no duplicate order IDs.
+- Created `gold_daily_delivery_metrics` with 1,132 rows.
+- Created `gold_carrier_performance` with 12 carrier-region combinations.
+- Cross-checked aggregate totals across both Gold tables:
+  - Total orders: 1,320
+  - Delivered orders: 915
+  - On-time deliveries: 369
+  - Late deliveries: 546
+- Verified that daily and carrier-level delivery metrics reconcile.
 
 ### Power BI
 
@@ -44,7 +58,6 @@
 
 ## Known Gaps and Future Enhancements
 
-- Reconcile Gold-layer delivered and on-time delivery counts.
 - Capture evidence of a successful end-to-end pipeline run.
 - Add additional report screenshots and supporting validation evidence.
 - Consider additional operational monitoring and deployment practices.
