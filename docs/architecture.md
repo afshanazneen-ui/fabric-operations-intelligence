@@ -6,6 +6,8 @@ Delivery Operations Intelligence is a data engineering and business intelligence
 
 The solution follows a Medallion Architecture, organizing data into Bronze, Silver, and Gold layers before exposing curated analytical tables through a Power BI Direct Lake semantic model.
 
+The architecture demonstrates an end-to-end analytics workflow, from source data ingestion and transformation to business-focused reporting.
+
 ## 2. Logical Architecture
 
 ```text
@@ -22,10 +24,11 @@ Microsoft Fabric Lakehouse
           v
 Bronze Layer
   └── Source-aligned Delta tables
+      Ingestion metadata and control
           |
           v
 Silver Layer
-  └── Cleaned and validated Delta tables
+  └── Standardized and validated Delta tables
           |
           v
 Gold Layer
@@ -44,7 +47,7 @@ Executive Delivery Dashboard
 
 ## 3. Data Ingestion and Processing
 
-The project uses a Microsoft Fabric Data Factory pipeline named `pl_delivery_medallion` to organize the processing workflow.
+The project uses a Microsoft Fabric Data Pipeline named `pl_delivery_medallion` to organize the processing workflow.
 
 The pipeline contains three sequential notebook activities:
 
@@ -52,7 +55,7 @@ The pipeline contains three sequential notebook activities:
 2. `nb_delivery_silver_transform`
 3. `nb_delivery_gold_analytics`
 
-Each notebook activity was executed and completed successfully during implementation.
+All three notebook activities recorded successful individual executions during implementation. A successful end-to-end pipeline execution has not yet been independently evidenced.
 
 ### Bronze Layer
 
@@ -76,8 +79,8 @@ Key activities include:
 - Date and timestamp parsing.
 - Data quality checks.
 - Duplicate business-key checks.
-- Referential-integrity checks.
-- Record-count validation.
+- Foreign-key validation.
+- Bronze-to-Silver record-count reconciliation.
 
 ### Gold Layer
 
@@ -88,43 +91,55 @@ The Gold layer provides curated analytical datasets for reporting.
 | `gold_delivery_performance` | Order-level delivery performance analysis. |
 | `gold_daily_delivery_metrics` | Daily delivery metrics grouped by order date and region. |
 | `gold_carrier_performance` | Carrier and region performance compared with targets. |
-| `dim_date` | Date dimension for reporting and time-based analysis. |
+| `dim_date` | Shared date dimension for reporting and time-based analysis. |
 
-Gold tables are written in Delta format.
+Gold tables are stored in Delta format.
 
 ## 4. Power BI Semantic Model
 
 The Power BI semantic model uses Direct Lake connectivity to the Fabric Lakehouse.
 
-The model includes:
+The model includes the following analytical tables:
 
 - `gold_delivery_performance`
 - `gold_daily_delivery_metrics`
 - `gold_carrier_performance`
 - `dim_date`
-- Supporting measure and reporting helper tables.
 
-The implemented date relationships are:
+Supporting tables include:
 
-- `dim_date[Date]` to `gold_daily_delivery_metrics[order_date]` (one-to-many).
-- `dim_date[Date]` to `gold_delivery_performance[order_date]` (one-to-many).
+- `Measures`
+- `Delivery Status Legend`
+- `Delivery Days Threshold`
+- `Delivery Duration Bins`
 
-The carrier performance table is not connected to the date dimension in the current model.
+### Implemented Relationships
+
+The model contains two date relationships:
+
+| One Side | Many Side |
+|---|---|
+| `dim_date[Date]` | `gold_daily_delivery_metrics[order_date]` |
+| `dim_date[Date]` | `gold_delivery_performance[order_date]` |
+
+Both relationships are many-to-one from the analytical tables to `dim_date`.
+
+The `gold_carrier_performance` table is included in the model but does not have a documented relationship to the date dimension.
 
 ## 5. Power BI Reporting
 
-The project includes one Executive Delivery Dashboard page.
+The project includes an Executive Delivery Dashboard.
 
 It provides:
 
 - Delivery performance KPIs.
 - On-time delivery performance against targets.
 - Late orders and order volume.
-- Average delivery time.
+- Average delivery days.
 - Delivery status distribution.
 - Regional and carrier comparisons.
 - Monthly delivery performance trends.
-- Delivery time distribution.
+- Delivery-duration analysis.
 
 Report filters include Region, Carrier, and Year.
 
@@ -132,18 +147,22 @@ Report filters include Region, Carrier, and Year.
 
 The Gold layer uses different analytical grains:
 
-- `gold_delivery_performance`: one row per order.
-- `gold_daily_delivery_metrics`: one row per order date and region.
-- `gold_carrier_performance`: one row per carrier and region.
-- `dim_date`: one row per calendar date.
+| Table | Data Grain |
+|---|---|
+| `gold_delivery_performance` | One row per order |
+| `gold_daily_delivery_metrics` | One row per order date and region |
+| `gold_carrier_performance` | One row per carrier and region |
+| `dim_date` | One row per calendar date |
 
-These grains are important when interpreting measures and aggregating order values or delivery counts.
+These grains are important when interpreting metrics and aggregating order values, delivery counts, and performance percentages.
+
+The shared date dimension supports consistent time-based filtering across the two connected analytical tables.
 
 ## 7. Scope and Limitations
 
 The current implementation focuses on batch ingestion, Lakehouse transformations, curated analytical tables, and Power BI reporting.
 
-The following capabilities are not represented as implemented features in this project:
+The following capabilities are not implemented as part of the current project:
 
 - Real-time streaming through Eventstream or Eventhouse.
 - Automated production monitoring and alerting.
@@ -151,7 +170,7 @@ The following capabilities are not represented as implemented features in this p
 - Production deployment automation.
 - A formal automated testing framework.
 
-These may be considered future enhancements.
+These capabilities may be considered future enhancements.
 
 ## 8. Architecture Summary
 
