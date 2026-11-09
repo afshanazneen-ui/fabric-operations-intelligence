@@ -2,11 +2,11 @@
 
 ## 1. Overview
 
-This document describes the primary source datasets and curated Gold tables used in the Delivery Operations Intelligence project.
+This document describes the source datasets, Bronze and Silver tables, curated Gold tables, and key analytical structures used in the Delivery Operations Intelligence project.
 
 The project uses synthetic CSV source data stored in the `sample-data/` folder and processes it through the Bronze, Silver, and Gold layers in Microsoft Fabric.
 
-Column names and data types below reflect the implemented reporting model where verified. Source and Silver column types may differ because of transformation and standardization.
+Column names and descriptions below reflect the documented implementation. Source and Silver data types may differ because of transformation and standardization.
 
 ## 2. Source Datasets
 
@@ -18,9 +18,28 @@ Column names and data types below reflect the implemented reporting model where 
 | `delivery_events.csv` | Delivery tracking events and associated order information. | One row per delivery event |
 | `carrier_targets.csv` | On-time delivery targets by carrier and region. | One row per carrier-region combination |
 
-## 3. Gold Tables
+## 3. Bronze and Silver Tables
 
-### 3.1 `gold_delivery_performance`
+The Bronze and Silver layers contain corresponding datasets.
+
+| Bronze Table | Silver Table | Description |
+|---|---|---|
+| `bronze_orders` | `silver_orders` | Order transactions and delivery information |
+| `bronze_customers` | `silver_customers` | Customer information and attributes |
+| `bronze_order_items` | `silver_order_items` | Order line-item details |
+| `bronze_delivery_events` | `silver_delivery_events` | Delivery tracking events and history |
+| `bronze_carrier_targets` | `silver_carrier_targets` | Carrier performance targets |
+
+Additional Bronze ingestion-control tables:
+
+- `bronze_ingestion_control`
+- `bronze_ingestion_pending`
+
+The Bronze layer retains source-oriented data and ingestion metadata. The Silver layer contains standardized and validated datasets prepared for analytical processing.
+
+## 4. Gold Analytical Tables
+
+### 4.1 `gold_delivery_performance`
 
 **Grain:** One row per order.
 
@@ -38,11 +57,13 @@ Column names and data types below reflect the implemented reporting model where 
 | `actual_delivery_timestamp` | Actual delivery timestamp. |
 | `actual_delivery_date` | Actual delivery date. |
 | `delivery_location` | Delivery location. |
-| `delivery_status` | Delivery status. |
+| `delivery_status` | Latest delivery event status. |
 | `delivery_days` | Delivery duration in days. |
 | `is_on_time` | Indicates whether the delivery met its promised date. |
 
-### 3.2 `gold_daily_delivery_metrics`
+The latest delivery event is selected for each order using event timestamp ordering, with event ID used as a tie-breaker.
+
+### 4.2 `gold_daily_delivery_metrics`
 
 **Grain:** One row per order date and region.
 
@@ -58,14 +79,14 @@ Column names and data types below reflect the implemented reporting model where 
 | `total_order_value` | Total order value for the group. |
 | `on_time_delivery_rate` | On-time deliveries divided by delivered orders when delivered orders are greater than zero. |
 
-### 3.3 `gold_carrier_performance`
+### 4.3 `gold_carrier_performance`
 
 **Grain:** One row per carrier and region.
 
 | Column | Description |
 |---|---|
 | `carrier` | Delivery carrier. |
-| `region` | Region associated with the carrier performance. |
+| `region` | Region associated with carrier performance. |
 | `total_orders` | Total orders in the group. |
 | `delivered_orders` | Number of delivered orders. |
 | `on_time_deliveries` | Number of on-time deliveries. |
@@ -76,11 +97,13 @@ Column names and data types below reflect the implemented reporting model where 
 | `target_gap` | Difference between actual and target performance. |
 | `target_status` | Indicates performance relative to the target. |
 
-### 3.4 `dim_date`
+Carrier targets are sourced from `silver_carrier_targets`.
+
+### 4.4 `dim_date`
 
 **Grain:** One row per calendar date.
 
-The date dimension supports time-based reporting and includes date attributes such as:
+The date dimension supports time-based reporting and includes:
 
 - Date
 - Year
@@ -89,28 +112,33 @@ The date dimension supports time-based reporting and includes date attributes su
 - Day
 - Weekend indicator
 
-## 4. Data Modeling Considerations
+The implemented date coverage is January 2, 2024 through September 24, 2026.
+
+## 5. Data Modeling Considerations
 
 - `gold_delivery_performance` is maintained at order grain.
 - `gold_daily_delivery_metrics` is aggregated at order-date and region grain.
 - `gold_carrier_performance` is aggregated at carrier and region grain.
 - `dim_date` provides calendar attributes for time-based analysis.
+- The latest delivery event is used to determine order-level delivery information.
 - Order values should be aggregated at order grain to avoid duplication when working with delivery-event history.
+- Aggregated delivery metrics should be interpreted according to their respective table grains.
 
-## 5. Semantic Model Relationships
+## 6. Semantic Model Relationships
 
-The current Power BI semantic model includes these date relationships:
+The current Power BI semantic model includes two date relationships:
 
 | One Side | Many Side | Cardinality |
 |---|---|---|
 | `dim_date[Date]` | `gold_daily_delivery_metrics[order_date]` | One-to-many |
 | `dim_date[Date]` | `gold_delivery_performance[order_date]` | One-to-many |
 
-`gold_carrier_performance` is not currently connected to `dim_date`.
+`gold_carrier_performance` is included in the semantic model but is not currently connected to `dim_date`.
 
-## 6. Notes and Limitations
+## 7. Notes and Limitations
 
 - Source and Silver data types may differ from the final Gold reporting types.
-- The dictionary describes the current documented implementation, not a proposed future schema.
-- Supporting measure and reporting helper tables are part of the semantic model but are not detailed here.
+- This dictionary describes the documented implementation, not a proposed future schema.
+- Supporting semantic model tables include `Measures`, `Delivery Status Legend`, `Delivery Days Threshold`, and `Delivery Duration Bins`.
+- Supporting table column definitions are not included in this dictionary.
 - Data definitions should be updated if the implemented schemas change.
