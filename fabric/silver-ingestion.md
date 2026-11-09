@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Silver layer contains cleaned and standardized Delta tables derived from the Bronze layer. The transformation process prepares the source data for analytical processing and downstream Gold-layer reporting.
+The Silver layer contains cleaned and standardized Delta tables derived from the Bronze layer. The transformation process prepares source data for analytical processing and downstream Gold-layer reporting.
 
 ## Silver Tables
 
@@ -14,7 +14,7 @@ The following Silver tables were created:
 | `silver_customers` | `bronze_customers` |
 | `silver_order_items` | `bronze_order_items` |
 | `silver_delivery_events` | `bronze_delivery_events` |
-| `Silver_carrier_targets` | `bronze_carrier_targets` |
+| `silver_carrier_targets` | `bronze_carrier_targets` |
 
 ## Transformation and Data Quality
 
@@ -45,11 +45,11 @@ The validated Silver row counts matched the corresponding Bronze row counts.
 
 ## Implementation
 
-- Transformation implemented using PySpark in a Microsoft Fabric notebook.
+- Transformations implemented using PySpark in a Microsoft Fabric notebook.
 - Silver tables stored in Delta format.
 - The Silver transformation notebook completed successfully.
-- The notebook uses overwrite operations for the Orders and Delivery Events tables.
+- Overwrite operations are used for the Orders and Delivery Events tables.
 
 ## Downstream Usage
 
-The Silver layer serves as the prepared data foundation for Gold-layer analytical tables and reporting.
+The Silver layer serves as the prepared data foundation for Gold-layer analytical tables, business metrics, and Power BI reporting.
