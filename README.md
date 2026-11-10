@@ -8,6 +8,8 @@ Delivery Operations Intelligence is an end-to-end data analytics portfolio proje
 
 The project demonstrates how delivery data can be ingested, transformed, organized into analytical tables, and presented through an interactive executive dashboard.
 
+Using synthetic delivery data, the solution demonstrates a Lakehouse medallion architecture, PySpark-based data processing, curated Gold analytical tables, and Power BI Direct Lake reporting.
+
 ## Architecture
 
 The solution follows a Medallion Architecture:
@@ -16,7 +18,7 @@ The solution follows a Medallion Architecture:
 
 - **Bronze:** Ingests source data into Delta tables and maintains ingestion metadata and control information.
 - **Silver:** Applies data transformations, standardization, and data quality validation.
-- **Gold:** Creates curated analytical tables for delivery performance, daily metrics, and carrier analysis.
+- **Gold:** Creates curated analytical tables for order-level delivery performance, daily metrics, and carrier analysis.
 - **Power BI:** Uses a Direct Lake semantic model to support the Executive Delivery Dashboard.
 
 ## Technology Stack
@@ -28,7 +30,6 @@ The solution follows a Medallion Architecture:
 - Fabric Data Pipelines
 - Power BI
 - Direct Lake
-- DAX and Power Query
 
 ## Business Objectives
 
@@ -52,7 +53,7 @@ The project focuses on analyzing:
 | `powerbi/` | Power BI report documentation and dashboard preview |
 | `docs/` | Architecture, business requirements, data dictionary, KPI definitions, design decisions, deployment runbook, limitations, and implementation status |
 | `sample-data/` | Synthetic CSV source datasets used for ingestion |
-| `tests/` | Data validation and testing approach |
+| `tests/` | Data validation and testing documentation |
 
 ## Documentation
 
@@ -72,14 +73,44 @@ The project focuses on analyzing:
 
 ## Project Status
 
-The Fabric Lakehouse medallion layers, three processing notebooks, pipeline configuration, Gold analytical tables, Direct Lake semantic model, and Executive Delivery Dashboard have been implemented and documented.
+The following project components have been implemented:
 
-The pipeline is named `pl_delivery_medallion` and uses three notebooks:
+- Fabric Lakehouse with Bronze, Silver, and Gold layers.
+- Three PySpark processing notebooks.
+- Fabric Data Pipeline configuration.
+- Curated Gold analytical tables.
+- Direct Lake semantic model.
+- Executive Delivery Dashboard.
+- Project architecture and implementation documentation.
+- Notebook-level data validation.
+
+The Fabric pipeline is named `pl_delivery_medallion` and contains three notebook activities:
 
 1. `nb_delivery_bronze_ingestion`
 2. `nb_delivery_silver_transform`
 3. `nb_delivery_gold_analytics`
 
-Individual notebook activities completed successfully during implementation. End-to-end pipeline execution evidence and Gold-layer KPI reconciliation remain areas for further validation.
+Individual notebook activities completed successfully during implementation. A successful end-to-end pipeline execution has not yet been documented.
 
-This portfolio demonstrates practical Microsoft Fabric and Power BI solution development using synthetic data.
+### Gold-Layer Validation Results
+
+The current synthetic dataset was validated with the following results:
+
+| Metric | Validated Result |
+|---|---:|
+| Total orders | 1,320 |
+| Delivered orders | 915 |
+| On-time deliveries | 369 |
+| Late deliveries | 546 |
+| Daily metrics records | 1,132 |
+| Carrier-region combinations | 12 |
+
+Daily and carrier-level aggregate metrics were cross-checked against the order-level Gold table.
+
+## Project Scope and Limitations
+
+This is a portfolio demonstration using synthetic data, not a production deployment.
+
+Real-time streaming, production monitoring, automated alerting, CI/CD deployment, row-level security, and a formal automated testing framework have not been implemented.
+
+The project demonstrates practical Microsoft Fabric and Power BI solution development, data engineering workflows, analytical modeling, and executive reporting.
