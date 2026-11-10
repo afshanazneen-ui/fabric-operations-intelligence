@@ -86,7 +86,7 @@ The following project components have been implemented:
 
 ### Pipeline Configuration
 
-The Fabric pipeline is named `pl_delivery_medallion` and contains three notebook activities:
+The Fabric pipeline is named `pl_delivery_medallion` and contains three sequential notebook activities:
 
 1. `nb_delivery_bronze_ingestion`
 2. `nb_delivery_silver_transform`
@@ -110,12 +110,21 @@ The Gold analytical tables were validated with the following results:
 
 | Metric | Validated Result |
 |---|---:|
-| Total orders | 1,320 |
+| `gold_delivery_performance` rows | 1,320 |
+| Distinct order IDs | 1,320 |
+| Duplicate order IDs | 0 |
 | Delivered orders | 915 |
 | On-time deliveries | 369 |
 | Late deliveries | 546 |
-| Daily metrics records | 1,132 |
-| Carrier-region combinations | 12 |
+| `gold_daily_delivery_metrics` rows | 1,132 |
+| `gold_carrier_performance` carrier-region combinations | 12 |
+
+Additional Gold data-quality checks confirmed:
+
+- No delivered orders with null `is_on_time` values.
+- No delivered orders missing an actual delivery timestamp.
+- No negative delivery durations.
+- Continuous date dimension coverage from January 2, 2024 through September 24, 2026.
 
 The Gold tables include:
 
@@ -126,10 +135,28 @@ The Gold tables include:
 
 Daily and carrier-level aggregate metrics were cross-checked against the order-level Gold table.
 
+### Semantic Model Notes
+
+The Direct Lake semantic model includes the three Gold tables, `dim_date`, and supporting reporting tables.
+
+Two date relationships are implemented:
+
+- `dim_date[Date]` to `gold_daily_delivery_metrics[order_date]`.
+- `dim_date[Date]` to `gold_delivery_performance[order_date]`.
+
+The `gold_carrier_performance` table is not connected to `dim_date`. Consequently, the Year slicer does not filter carrier performance through the date dimension.
+
 ## Project Scope and Limitations
 
 This is a portfolio demonstration using synthetic data, not a production deployment.
 
-Real-time streaming, production monitoring, automated alerting, CI/CD deployment, row-level security, and a formal automated testing framework have not been implemented.
+The following capabilities have not been implemented:
 
-The project demonstrates practical Microsoft Fabric and Power BI solution development, data engineering workflows, analytical modeling, and executive reporting.
+- Real-time streaming.
+- Production monitoring and automated alerting.
+- CI/CD deployment automation.
+- Row-level security.
+- A formal automated testing framework.
+- Report drillthrough and drilldown functionality.
+
+The project demonstrates practical Microsoft Fabric and Power BI solution development, data engineering workflows, analytical modeling, data validation, and executive reporting.
