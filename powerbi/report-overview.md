@@ -16,17 +16,15 @@ The Executive Delivery Dashboard brings together key delivery performance indica
 
 The dashboard includes:
 
-- **YTD On-Time Delivery Rate:** Measures year-to-date delivery performance.
+- **YTD On-Time Delivery Rate:** Measures the year-to-date percentage of delivered orders completed on or before the promised delivery date.
 - **On-Time Delivery Target:** Provides the benchmark for evaluating delivery performance.
-- **OTD Variance:** Shows the difference between actual on-time delivery performance and the target.
-- **Late Orders:** Tracks orders classified as late.
+- **OTD Variance:** Shows the difference between actual on-time delivery performance and the target, expressed in percentage points.
+- **Late Orders:** Tracks delivered orders classified as late.
 - **Total Orders:** Displays the overall order volume.
-- **Average Delivery Days:** Shows average delivery duration.
-- **On-Time Orders:** Tracks orders delivered on time.
+- **Average Delivery Days:** Shows the average delivery duration for delivered orders.
+- **On-Time Orders:** Tracks orders delivered on or before the promised delivery date.
 
 ### Report Visualizations
-
-The dashboard includes the following visualizations:
 
 | Visualization | Business Purpose |
 |---|---|
@@ -46,11 +44,20 @@ The dashboard provides slicers for:
 
 These filters allow users to explore delivery performance across different operational segments and reporting periods.
 
+**Filtering note:** The date dimension is related to `gold_delivery_performance` and `gold_daily_delivery_metrics`. The `gold_carrier_performance` table does not currently have a relationship to `dim_date`, so Year filtering does not automatically propagate to visuals using that table.
+
 ## Data Source
 
-The report uses the Delivery Operations Intelligence semantic model in Microsoft Fabric, which is connected to the Lakehouse Gold-layer analytics tables.
+The report uses the Delivery Operations Intelligence semantic model in Microsoft Fabric, connected to the Lakehouse Gold-layer analytical tables.
 
-The semantic model uses Direct Lake.
+The semantic model uses Direct Lake and includes the following Gold tables:
+
+- `gold_delivery_performance`
+- `gold_daily_delivery_metrics`
+- `gold_carrier_performance`
+- `dim_date`
+
+The model also contains supporting reporting tables for delivery status, delivery duration thresholds, and duration bins.
 
 ## Business Value
 
@@ -65,4 +72,6 @@ The dashboard helps business stakeholders:
 
 ## Report Scope
 
-This documentation covers the Executive Delivery Dashboard page. Detailed DAX definitions and individual measure implementation are maintained outside the scope of this report overview.
+This documentation covers the Executive Delivery Dashboard page, its key indicators, visualizations, and interactive filtering.
+
+Detailed DAX definitions and individual measure implementations are outside the scope of this report overview.
