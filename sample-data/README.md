@@ -2,9 +2,9 @@
 
 ## Overview
 
-This folder contains the sample source datasets used in the Delivery Operations Intelligence project.
+This folder contains the synthetic source datasets used in the Delivery Operations Intelligence project.
 
-The datasets represent order, customer, order item, delivery event, and carrier target information used to demonstrate data ingestion and transformation in Microsoft Fabric.
+The datasets represent order, customer, order item, delivery event, and carrier target information used to demonstrate data ingestion, transformation, and analytical processing in Microsoft Fabric.
 
 ## Files
 
@@ -18,6 +18,12 @@ The datasets represent order, customer, order item, delivery event, and carrier 
 
 ## Usage
 
-These files serve as source datasets for the Bronze layer of the Fabric Lakehouse medallion architecture.
+These files serve as source datasets for the Bronze layer of the Fabric Lakehouse Medallion Architecture.
 
-The data is provided for portfolio demonstration purposes.
+The files are ingested into Bronze Delta tables and subsequently transformed through the Silver and Gold layers for analytical reporting.
+
+## Data Scope
+
+The datasets contain synthetic records created for portfolio demonstration purposes. They do not represent actual customer, order, or carrier information.
+
+The source data is intended to demonstrate data engineering and analytics workflows rather than support production operations.
