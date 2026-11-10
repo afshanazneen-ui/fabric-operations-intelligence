@@ -1,6 +1,6 @@
 # Implementation Status
 
-## Completed
+## 1. Completed
 
 ### Microsoft Fabric
 
@@ -20,7 +20,19 @@
   - `nb_delivery_bronze_ingestion`
   - `nb_delivery_silver_transform`
   - `nb_delivery_gold_analytics`
-- Executed all three notebook activities successfully during implementation.
+- Executed all three notebooks successfully during implementation.
+
+### Bronze and Silver Validation
+
+The following record counts were verified:
+
+| Dataset | Bronze Rows | Silver Rows |
+|---|---:|---:|
+| Orders | 1,320 | 1,320 |
+| Customers | 89 | 89 |
+| Order Items | 2,632 | 2,632 |
+| Delivery Events | 2,154 | 2,154 |
+| Carrier Targets | 12 | 12 |
 
 ### Gold Layer Validation
 
@@ -34,18 +46,23 @@
   - On-time deliveries: 369
   - Late deliveries: 546
 - Verified that daily and carrier-level delivery metrics reconcile with the order-level dataset.
+- Validated date dimension coverage from January 2, 2024 through September 24, 2026.
 
 ### Power BI
 
 - Created a Power BI semantic model using Direct Lake connectivity to the Fabric Lakehouse.
-- Configured two date relationships for order-level and daily delivery reporting.
+- Configured two date relationships for order-level and daily delivery reporting:
+  - `dim_date[Date]` to `gold_delivery_performance[order_date]`
+  - `dim_date[Date]` to `gold_daily_delivery_metrics[order_date]`
 - Included Gold analytical tables and supporting reporting tables in the semantic model.
 - Created the Executive Delivery Dashboard.
 - Added delivery KPIs, performance trends, regional analysis, carrier comparisons, and delivery-duration visuals.
 - Added Region, Carrier, and Year report filters.
 - Displayed a last-refresh timestamp on the report.
 
-## Documentation Completed
+**Semantic model limitation:** `gold_carrier_performance` is included in the model but is not currently connected to `dim_date`. Date filters therefore do not automatically propagate to this table.
+
+## 2. Documentation Completed
 
 - Project architecture.
 - Business requirements.
@@ -58,18 +75,22 @@
 - Power BI report overview.
 - Data validation documentation.
 
-## Known Gaps and Future Enhancements
+## 3. Known Gaps and Future Enhancements
 
 - Capture evidence of a successful end-to-end pipeline run.
 - Add additional report screenshots and supporting validation evidence.
-- Consider additional operational monitoring and deployment practices.
+- Consider operational monitoring, alerting, and failure-handling practices.
 - Explore incremental ingestion improvements and automated execution scheduling.
+- Consider a formal automated testing framework.
+- Evaluate CI/CD deployment and production security capabilities, including row-level security.
 
-## Notes
+These items are potential enhancements and are not documented as completed capabilities.
+
+## 4. Implementation Notes
 
 This page summarizes the implementation completed to date.
 
-All three notebook activities have recorded successful individual executions. However, individual notebook success does not establish a successful end-to-end pipeline run.
+All three notebooks have recorded successful individual executions. However, individual notebook success does not establish a successful end-to-end pipeline run.
 
 The project uses synthetic data for portfolio demonstration purposes and is not a production deployment.
 
