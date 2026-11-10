@@ -51,16 +51,27 @@ The following record counts were verified:
 ### Power BI
 
 - Created a Power BI semantic model using Direct Lake connectivity to the Fabric Lakehouse.
+- Included the following Gold analytical tables:
+  - `gold_delivery_performance`
+  - `gold_daily_delivery_metrics`
+  - `gold_carrier_performance`
+  - `dim_date`
+- Included supporting reporting tables:
+  - `Measures`
+  - `Delivery Status Legend`
+  - `Delivery Days Threshold`
+  - `Delivery Duration Bins`
 - Configured two date relationships for order-level and daily delivery reporting:
   - `dim_date[Date]` to `gold_delivery_performance[order_date]`
   - `dim_date[Date]` to `gold_daily_delivery_metrics[order_date]`
-- Included Gold analytical tables and supporting reporting tables in the semantic model.
 - Created the Executive Delivery Dashboard.
 - Added delivery KPIs, performance trends, regional analysis, carrier comparisons, and delivery-duration visuals.
 - Added Region, Carrier, and Year report filters.
 - Displayed a last-refresh timestamp on the report.
 
-**Semantic model limitation:** `gold_carrier_performance` is included in the model but is not currently connected to `dim_date`. Date filters therefore do not automatically propagate to this table.
+**Semantic model limitation:** `gold_carrier_performance` is included in the model but is not currently connected to `dim_date`. Year filters therefore do not automatically propagate to this table.
+
+**Reporting limitation:** The Executive Delivery Dashboard does not currently implement drillthrough or drilldown functionality.
 
 ## 2. Documentation Completed
 
@@ -77,18 +88,22 @@ The following record counts were verified:
 
 ## 3. Known Gaps and Future Enhancements
 
+The following capabilities have not been implemented or fully validated:
+
 - Capture evidence of a successful end-to-end pipeline run.
 - Add additional report screenshots and supporting validation evidence.
-- Consider operational monitoring, alerting, and failure-handling practices.
+- Implement operational monitoring, alerting, and failure-handling practices.
 - Explore incremental ingestion improvements and automated execution scheduling.
-- Consider a formal automated testing framework.
+- Introduce a formal automated testing framework.
 - Evaluate CI/CD deployment and production security capabilities, including row-level security.
+- Consider improvements to semantic model relationships and date-based carrier performance analysis.
+- Consider adding report drillthrough or drilldown functionality.
 
 These items are potential enhancements and are not documented as completed capabilities.
 
 ## 4. Implementation Notes
 
-This page summarizes the implementation completed to date.
+This document summarizes the implementation completed to date.
 
 All three notebooks have recorded successful individual executions. However, individual notebook success does not establish a successful end-to-end pipeline run.
 
